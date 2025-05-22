@@ -12,33 +12,42 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
+from urllib.parse import urlparse # Import urlparse to parse the database URL
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Static root directory
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Save the static files in the staticfiles directory
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-dsrg&#fj6*o--#rnr%8vm^)4#y=zw+i0re$gwfkf3ol32!2ea0'
+SECRET_KEY = 'django-insecure-5l-v9d53l5f*5!$da_+k!&xk*6bhei-lxp(c^db1hw+o-gz(j!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True # Set to True for development
+DEBUG = False # Set to False for production (Hosting on Render.com)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*'] # Allow all hosts for development purposes
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts',                     # Custom app for user accounts
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',  # Custom user app
 ]
 
 MIDDLEWARE = [
@@ -74,23 +83,28 @@ WSGI_APPLICATION = 'wind_turbine_monitor.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+db_url = os.getenv('DATABASE_URL')
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'HOST': os.getenv('PGHOST'),
-#         'NAME': os.getenv('PGDATABASE'),
-#         'USER': os.getenv('PGUSER'),
-#         'PASSWORD': os.getenv('PGPASSWORD'),
-#         'PORT': os.getenv('PGPORT'),
-#     }
-# }
+if db_url:
+    result = urlparse(db_url)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': result.path[1:],  # exclude the leading '/'
+            'USER': result.username,
+            'PASSWORD': result.password,
+            'HOST': result.hostname,
+            'PORT': result.port,
+        }
+    }
+else:
+    # fallback local db
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -127,22 +141,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
-# added for static files and railway settings
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# django_project/settings.py
-LOGIN_REDIRECT_URL = "home"   # Redirect to home page after login
-LOGOUT_REDIRECT_URL = "home"  # Redirect to home page after logout
 
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
+# URL configuration	
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = '/dashboard/'
+LOGOUT_REDIRECT_URL = 'login'

@@ -1,0 +1,21 @@
+<!-- templates/base_generic.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Wind Turbine Manager{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>Wind Turbine Manager</h1>
+    </header>
+    
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 SmartNest</p>
+    </footer>
+</body>
+</html>

@@ -16,11 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("accounts/", include("accounts.urls")), # Custom user app URLs
-    path("accounts/", include("django.contrib.auth.urls")), # For login/logout
-    path("", TemplateView.as_view(template_name="home.html"), name="home"), # Home page
+    path('', include('accounts.urls')), # Include the URLs from the accounts app
 ]

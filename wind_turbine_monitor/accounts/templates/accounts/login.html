@@ -1,0 +1,28 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h2>Login</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <label>Username:</label><br>
+    <input type="text" name="username"><br>
+    <label>Password:</label><br>
+    <input type="password" name="password"><br><br>
+    <button type="submit">Login</button>
+</form>
+
+<br>
+<p>Nu ai cont? <a href="{% url 'signup' %}">Înregistrează-te aici</a></p>
+<p>Ai uitat parola? <a href="{% url 'password_reset' %}">Recuperează parola</a></p>
+
+{% if user.is_authenticated %}
+    <p>Vrei să schimbi parola? <a href="{% url 'password_change' %}">Schimbă parola</a></p>
+{% endif %}
+{% endblock %}
