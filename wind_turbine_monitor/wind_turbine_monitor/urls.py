@@ -16,8 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')), # Include the URLs from the accounts app
+    path('', RedirectView.as_view(url='/login/', permanent=False)), # Redirect root URL to login page
 ]
