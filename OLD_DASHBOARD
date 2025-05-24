@@ -325,93 +325,56 @@
     markersLayer = L.layerGroup().addTo(map);
   }
 
-function updateMarkers(turbines) {
-  // Șterge markerii vechi
-  markersLayer.clearLayers();
+  function updateMarkers(turbines) {
+    // Șterge markerii vechi, apoi:
+    turbines.forEach(turbine => {
+      let color = turbine.maintenance_overdue ? 'orange' : 'green';
 
-  turbines.forEach(turbine => {
-    let color = turbine.maintenance_overdue ? 'orange' : 'green';
+      // Exemplu pentru Leaflet
+      const marker = L.circleMarker([turbine.latitude, turbine.longitude], {
+        color: color,
+        radius: 8,
+        fillOpacity: 0.8,
+      }).addTo(map);
 
-    const marker = L.circleMarker([turbine.latitude, turbine.longitude], {
-      fillColor: color,
-      color: '#000', // contur negru ca să iasă bine în evidență
-      radius: 8,
-      fillOpacity: 0.8,
-    });
-
-    marker.bindPopup(`
+      marker.bindPopup(`
       <b>${turbine.name}</b><br/>
       Capacitate: ${turbine.capacity_kw} kW<br/>
       Ultima revizie: ${turbine.last_maintenance_date || 'N/A'}<br/>
       Revizie făcută: ${turbine.maintenance_done ? 'Da' : 'Nu'}<br/>
-      Output instant: ${turbine.instant_output_kw} kW
-    `);
-
-    // Adaugă markerul în layer-ul dedicat
-    markersLayer.addLayer(marker);
-  });
-}
-
-  let turbines = [];
+      Output instant: ${turbine.instant_output_kw} kW`);
+    });
+  }
 
 
   async function fetchTurbines() {
     try {
       const response = await fetch('/api/turbines/');
       if (!response.ok) throw new Error('Network response was not ok');
-      // const turbines = await response.json();
-      turbines = await response.json();
+      const turbines = await response.json();
 
       const turbineListDiv = document.getElementById('turbine-list');
       turbineListDiv.innerHTML = '<h3>Lista turbine</h3>';
 
-      turbines.forEach((turbine) => {
+      turbines.forEach((turbine, index) => {
         const accordionItem = document.createElement('div');
         accordionItem.className = 'accordion-item';
 
-        // Header cu nume turbine și click toggle conținut
         const header = document.createElement('div');
         header.className = 'accordion-header';
         header.textContent = turbine.name;
-        header.style.cursor = 'pointer';
+        header.addEventListener('click', () => {
+          content.classList.toggle('show');
+        });
 
-        // Conținut ascuns inițial
         const content = document.createElement('div');
         content.className = 'accordion-content';
-        content.style.display = 'none'; // ascuns inițial
-
-        header.addEventListener('click', () => {
-          content.style.display = content.style.display === 'block' ? 'none' : 'block';
-        });
-
-        // Conținut turbine cu detalii + butoane
         content.innerHTML = `
-        <p><strong>Capacitate:</strong> ${turbine.capacity_kw} kW</p>
-        <p><strong>Instalată la:</strong> ${turbine.installation_date}</p>
-        <p><strong>Coordonate:</strong> (${turbine.latitude}, ${turbine.longitude})</p>
-        <button class="delete-button" onclick="deleteTurbine(${turbine.id}, '${turbine.name.replace(/'/g, "\\'")}')">Șterge</button>
-        <button class="edit-button" onclick="showEditForm(${turbine.id})">Modifică</button>
-        <form id="edit-form-${turbine.id}" style="display:none; margin-top:10px;">
-          <label>
-            Last maintenance date:
-           <input type="date" name="last_maintenance_date" value="${formatDateForInput(turbine.last_maintenance_date)}" />
-          </label><br/>
-          <label>
-            Maintenance done:
-            <input type="checkbox" name="maintenance_done" ${turbine.maintenance_done ? 'checked' : ''} />
-          </label><br/>
-          <button type="submit">Salvează</button>
-          <button type="button" onclick="hideEditForm(${turbine.id})">Anulează</button>
-        </form>
-      `;
-
-        // Adaugă submit handler pe form-ul de editare
-        const editForm = content.querySelector(`#edit-form-${turbine.id}`);
-        editForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          const formData = new FormData(editForm);
-          updateTurbine(turbine.id, formData);
-        });
+          <p><strong>Capacitate:</strong> ${turbine.capacity_kw} kW</p>
+          <p><strong>Instalată la:</strong> ${turbine.installation_date}</p>
+          <p><strong>Coordonate:</strong> (${turbine.latitude}, ${turbine.longitude})</p>
+          <button class="delete-button" onclick="deleteTurbine(${turbine.id})">Șterge</button>
+        `;
 
         accordionItem.appendChild(header);
         accordionItem.appendChild(content);
@@ -424,21 +387,7 @@ function updateMarkers(turbines) {
     }
   }
 
-  function formatDateForInput(dateString) {
-    if (!dateString) return '';
-    const d = new Date(dateString);
-    if (isNaN(d)) return '';
-    // returnăm în format YYYY-MM-DD, necesar pentru input[type=date]
-    return d.toISOString().slice(0, 10);
-  }
-
-  async function deleteTurbine(id, name) {
-    // Confirmare înainte de ștergere
-    const confirmed = confirm(`Ești sigur că vrei să ștergi turbina "${name}"?`);
-    if (!confirmed) {
-      return; // dacă userul apasă Cancel, nu facem nimic
-    }
-
+  async function deleteTurbine(id) {
     try {
       const response = await fetch(`/api/turbines/${id}/`, {
         method: 'DELETE',
@@ -456,7 +405,6 @@ function updateMarkers(turbines) {
       console.error('Eroare rețea la ștergere:', error);
     }
   }
-
 
   document.getElementById('add-turbine-form').addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -513,37 +461,11 @@ function updateMarkers(turbines) {
   }
 
   async function updateTurbine(id, formData) {
-    // Preluăm datele vechi ale turbinei dintr-un obiect global sau le re-facem fetch înainte
-    // Exemplu: turbineData este un obiect cu datele actuale
-    // Dacă nu-l ai global, trebuie să-l ai altfel (de ex. să-l transmiți ca parametru)
-
-    const turbineData = turbines.find(t => t.id === id); // presupunem că ai un array `turbines`
-
-    if (!turbineData) {
-      alert('Datele turbinei nu sunt disponibile pentru update.');
-      return;
-    }
-
-    // Construim obiectul de update, pornind de la datele vechi
-    const data = {
-      name: turbineData.name,
-      capacity_kw: turbineData.capacity_kw,
-      installation_date: turbineData.installation_date,
-      latitude: turbineData.latitude,
-      longitude: turbineData.longitude,
-    };
-
-    // Suprascriem cu ce este în formData (cele modificate)
+    // Construim un obiect JSON din FormData
+    const data = {};
     formData.forEach((value, key) => {
       data[key] = value;
     });
-
-    // Checkbox transformat în boolean explicit
-    data.maintenance_done = formData.get('maintenance_done') === 'on';
-
-    // Formatăm data dacă e nevoie (opțional)
-
-    console.log('Date pentru update:', data);
 
     try {
       const response = await fetch(`/api/turbines/${id}/`, {
