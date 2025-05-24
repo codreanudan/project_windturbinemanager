@@ -22,6 +22,7 @@ from django.conf import settings
 from pathlib import Path
 from turbines.views import WindTurbineViewSet, api_dashboard_view  # Import the dashboard view
 import os
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -35,3 +36,4 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=BASE_DIR / "static")
+    urlpatterns += staticfiles_urlpatterns() # Serve static files in development

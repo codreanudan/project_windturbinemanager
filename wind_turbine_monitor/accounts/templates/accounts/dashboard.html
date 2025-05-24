@@ -1,8 +1,9 @@
 {% extends "base_generic.html" %}
 {% load static %}
-
 {% block content %}
+
 <style>
+  /* Stiluri pentru bara de navigare */
   .settings-menu {
     position: absolute;
     top: 60px;
@@ -57,6 +58,84 @@
       transform: rotate(360deg);
     }
   }
+
+  /* Stiluri pentru containerul dashboard-ului */
+
+  /* Container general */
+  #dashboard-container {
+    display: flex;
+    height: calc(100vh - 60px);
+    /* scazi navbarul */
+    width: 100vw;
+    overflow: hidden;
+  }
+
+  /* Stânga: Harta */
+  #map-section {
+    flex: 2;
+    background: #e2e8f0;
+  }
+
+  #map {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Dreapta: Formular + Listă */
+  #right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    background: #f8f9fa;
+    box-sizing: border-box;
+  }
+
+  /* Dreapta sus: formular */
+  #form-section {
+    flex: 1;
+    background: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  #form-section input,
+  #form-section button {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+  }
+
+  #form-section button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  #form-section button:hover {
+    background-color: #0056b3;
+  }
+
+  /* Dreapta jos: lista turbine */
+  #list-section {
+    flex: 2;
+    background: white;
+    padding: 10px;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  #turbine-list>div {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+  }
 </style>
 
 <!-- Bara de navigare -->
@@ -79,33 +158,64 @@
   </div>
 </nav>
 
-<!-- Conținut principal -->
-<div class="container mt-4">
-  <h2>Panou principal</h2>
-
-  <nav>
-    <button onclick="location.href='/api/turbines/'">Gestionare Parc Eoliene</button>
-  </nav>
-
-  <!-- Div pentru lista turbine -->
-  <div id="turbine-list" style="margin-bottom: 30px;">
-    <h3>Lista turbine</h3>
-    <!-- Aici va fi populată lista turbine -->
+<!-- Container general pentru harta + dreapta (formular + listă) -->
+<div id="dashboard-container">
+  <!-- Coloana Stânga: Harta -->
+  <div id="map-section">
+    <div id="map"></div>
   </div>
 
-  <!-- Div pentru hartă -->
-  <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+  <!-- Coloana Dreapta -->
+  <div id="right-section">
+    <!-- Dreapta sus: Formular -->
+    <div id="form-section">
+      <h3>Adaugă Turbină</h3>
+      <form id="add-turbine-form">
+        <input type="text" id="name" name="name" placeholder="Nume turbină" required>
+        <input type="number" id="capacity_kw" name="capacity_kw" placeholder="Capacitate (kW)" required>
+        <input type="date" id="installation_date" name="installation_date" required>
+        <input type="number" id="latitude" name="latitude" step="any" placeholder="Latitudine" required>
+        <input type="number" id="longitude" name="longitude" step="any" placeholder="Longitudine" required>
+        <button type="submit">Adaugă</button>
+      </form>
+      <div id="add-turbine-message"></div>
+    </div>
+
+    <!-- Dreapta jos: Lista -->
+    <div id="list-section">
+      <div id="turbine-list">
+        <!-- Populat din JS -->
+      </div>
+    </div>
+  </div>
 </div>
+
 
 <!-- Include Leaflet CSS și JS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const csrftoken = getCookie('csrftoken');
+
   function toggleMenu() {
     const menu = document.getElementById("settingsMenu");
     const button = document.querySelector(".settings-button");
-
     const isOpen = menu.style.display === "block";
 
     menu.style.display = isOpen ? "none" : "block";
@@ -127,6 +237,9 @@
     }
   });
 
+  let map;  // variabilă globală pentru hartă
+  let markersLayer; // layer pentru markere (ca să poți șterge ușor când actualizezi)
+
   async function fetchTurbines() {
     try {
       const response = await fetch('/api/turbines/');
@@ -138,7 +251,41 @@
 
       turbines.forEach(turbine => {
         const turbineDiv = document.createElement('div');
+        turbineDiv.style.marginBottom = '10px';
+
         turbineDiv.textContent = `${turbine.name} - Capacitate: ${turbine.capacity_kw} kW - Localizare: (${turbine.latitude}, ${turbine.longitude})`;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Șterge';
+        deleteBtn.style.marginLeft = '10px';
+        deleteBtn.style.backgroundColor = '#e74c3c';
+        deleteBtn.style.color = 'white';
+        deleteBtn.style.border = 'none';
+        deleteBtn.style.padding = '4px 8px';
+        deleteBtn.style.borderRadius = '4px';
+        deleteBtn.style.cursor = 'pointer';
+
+        deleteBtn.onclick = async () => {
+          if (confirm(`Ești sigur că vrei să ștergi turbina "${turbine.name}"?`)) {
+            try {
+              const response = await fetch(`/api/turbines/${turbine.id}/`, {
+                method: 'DELETE',
+                headers: {
+                  'X-CSRFToken': csrftoken,
+                },
+              });
+              if (!response.ok) throw new Error('Eroare la ștergerea turbinei');
+
+              // Reîncarcă lista și harta
+              const updatedTurbines = await fetchTurbines();
+              initMap(updatedTurbines);
+            } catch (error) {
+              alert(error.message);
+            }
+          }
+        };
+
+        turbineDiv.appendChild(deleteBtn);
         turbineListDiv.appendChild(turbineDiv);
       });
 
@@ -149,22 +296,27 @@
     }
   }
 
-  function initMap(turbines) {
-    // Creare hartă centrată pe România
-    const map = L.map('map').setView([45.9432, 24.9668], 7);
 
-    // Tile layer OSM
+  function initMap() {
+    // Creare hartă centrată pe România o singură dată
+    map = L.map('map').setView([45.9432, 24.9668], 7);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(map);
 
-    // Adaugă markere pentru fiecare turbină
+    markersLayer = L.layerGroup().addTo(map);
+  }
+
+  function updateMarkers(turbines) {
+    markersLayer.clearLayers(); // șterge markerele existente
+
     turbines.forEach(turbine => {
-      const marker = L.marker([turbine.latitude, turbine.longitude]).addTo(map);
-      marker.bindPopup(`<b>${turbine.name}</b><br>Capacitate: ${turbine.capacity_kw} kW<br>Instalată: ${turbine.installation_date}`);
+      const marker = L.marker([turbine.latitude, turbine.longitude]);
+      marker.bindPopup(`<b>${turbine.name}</b><br>Capacitate: ${turbine.capacity_kw} kW<br>Instalată: ${turbine.installation_date}<br>Localizare: (${turbine.latitude}, ${turbine.longitude})`);
+      markersLayer.addLayer(marker);
     });
 
-    // Ajustează zoom-ul să cuprindă toate markerele
     if (turbines.length > 0) {
       const group = new L.featureGroup(turbines.map(t => L.marker([t.latitude, t.longitude])));
       map.fitBounds(group.getBounds().pad(0.5));
@@ -172,8 +324,45 @@
   }
 
   window.onload = async function () {
+    initMap();
     const turbines = await fetchTurbines();
-    initMap(turbines);
+    updateMarkers(turbines);
   };
+
+  document.getElementById('add-turbine-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const turbineData = {
+      name: form.name.value,
+      capacity_kw: parseFloat(form.capacity_kw.value),
+      installation_date: form.installation_date.value,
+      latitude: parseFloat(form.latitude.value),
+      longitude: parseFloat(form.longitude.value),
+    };
+
+    try {
+      const response = await fetch('/api/turbines/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': csrftoken, // **adăugat token CSRF aici**
+        },
+        body: JSON.stringify(turbineData),
+      });
+
+      if (!response.ok) throw new Error('Eroare la crearea turbinei');
+
+      document.getElementById('add-turbine-message').innerHTML = `<div class="alert alert-success">Turbina a fost adăugată cu succes!</div>`;
+      form.reset();
+
+      const turbines = await fetchTurbines();
+      updateMarkers(turbines);  // actualizează markerele fără să recreezi harta
+    } catch (error) {
+      document.getElementById('add-turbine-message').innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+    }
+  });
+
+
 </script>
 {% endblock %}

@@ -1,26 +1,20 @@
 from django.shortcuts import render
-
 from rest_framework import viewsets
 from .models import WindTurbine
 from .serializers import WindTurbineSerializer
-
-from django.http import HttpResponse, Http404
 from pathlib import Path
-from django.conf import settings
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-# Create your views here.
 
-# This viewset automatically provides `list`, `create`, `retrieve`, `update` and `destroy` actions.
 class WindTurbineViewSet(viewsets.ModelViewSet):
     """
-        API endpoint that allows wind turbines to be viewed or edited.
+    API endpoint that allows wind turbines to be viewed or edited.
     """
     queryset = WindTurbine.objects.all()
     serializer_class = WindTurbineSerializer
-    
-def api_dashboard_view(request):
-    return render(request, 'api_dashboard.html')
-    
 
+def api_dashboard_view(request):
+    fields = ["name", "capacity_kw", "installation_date", "latitude", "longitude"]
+    # Creăm o listă de tuple (field_name, placeholder)
+    fields_with_placeholders = [(f, f.replace('_', ' ').capitalize()) for f in fields]
+    return render(request, "dashboard.html", {"fields_with_placeholders": fields_with_placeholders})
