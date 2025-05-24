@@ -17,9 +17,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
+from django.conf.urls.static import static
+from django.conf import settings
+from pathlib import Path
+from turbines.views import WindTurbineViewSet, api_dashboard_view  # Import the dashboard view
+import os
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')), # Include the URLs from the accounts app
     path('', RedirectView.as_view(url='/login/', permanent=False)), # Redirect root URL to login page
+    path('api/', include('turbines.urls')), # Include the URLs from the turbines app
+    path('dashboard/', api_dashboard_view, name='api-dashboard'),  # Dashboard view for the API
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=BASE_DIR / "static")

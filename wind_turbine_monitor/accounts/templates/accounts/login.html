@@ -1,28 +1,157 @@
 {% extends "base_generic.html" %}
 
+{% load static %}
+
 {% block content %}
-<h2>Login</h2>
+<style>
+  body {
+    background: url("{% static 'img/login_background.jpg' %}") no-repeat center center fixed;
+    background-size: cover;
+  }
 
-{% if messages %}
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 1rem;
+  }
+
+  .login-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    padding: 2.5rem 2rem;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 400px;
+    color: rgb(0, 0, 0);
+    text-align: center;
+  }
+
+  .login-card h2 {
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+  }
+
+  .login-card label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.3rem;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .login-card input[type="text"],
+  .login-card input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 1.2rem;
+    border: 1.5px solid #ccc;
+    /* bordură gri */
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #000;
+    background-color: #fff;
+    box-sizing: border-box;
+  }
+
+  .login-card input[type="text"]::placeholder,
+  .login-card input[type="password"]::placeholder {
+    color: #666;
+  }
+
+  .login-card button {
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    font-weight: 700;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .login-card button:hover {
+    background-color: #218838;
+  }
+
+  .login-links {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .login-links a {
+    color: #0d6efd;
+    /* albastru Bootstrap */
+    text-decoration: underline;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  .login-links a:hover {
+    color: #0a58ca;
+  }
+
+  /* Mesaje eroare */
+  .login-card .error-message {
+    color: #ff4d4d;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  /* Footer ancorat jos */
+  footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white !important;
+    padding: 0.75rem 0;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    z-index: 1000;
+  }
+</style>
+
+<div class="login-container">
+  <div class="login-card">
+    <h2>Login</h2>
+
+    {% if messages %}
     {% for message in messages %}
-        <p style="color: red;">{{ message }}</p>
+    <p class="error-message">{{ message }}</p>
     {% endfor %}
-{% endif %}
+    {% endif %}
 
-<form method="post">
-    {% csrf_token %}
-    <label>Username:</label><br>
-    <input type="text" name="username"><br>
-    <label>Password:</label><br>
-    <input type="password" name="password"><br><br>
-    <button type="submit">Login</button>
-</form>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <label for="username">Username:</label>
+      <input id="username" type="text" name="username" required placeholder="Introdu username-ul">
 
-<br>
-<p>Nu ai cont? <a href="{% url 'signup' %}">Înregistrează-te aici</a></p>
-<p>Ai uitat parola? <a href="{% url 'password_reset' %}">Recuperează parola</a></p>
+      <label for="password">Password:</label>
+      <input id="password" type="password" name="password" required placeholder="Introdu parola">
 
-{% if user.is_authenticated %}
-    <p>Vrei să schimbi parola? <a href="{% url 'password_change' %}">Schimbă parola</a></p>
-{% endif %}
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="login-links">
+      <a href="{% url 'signup' %}">Înregistrează-te</a>
+      <a href="{% url 'password_reset' %}">Recuperează parola</a>
+    </div>
+
+    {% if user.is_authenticated %}
+    <p style="margin-top: 1rem;">
+      Vrei să schimbi parola? <a href="{% url 'password_change' %}"
+        style="color: #0d6efd; text-decoration: underline;">Schimbă parola</a>
+    </p>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

@@ -1,15 +1,179 @@
 {% extends "base_generic.html" %}
+{% load static %}
 
 {% block content %}
-<h1>Dashboard</h1>
+<style>
+  .settings-menu {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+    display: none;
+    z-index: 1000;
+  }
 
-<p>Bine ai venit, {{ user.username }}!</p>
+  .settings-menu a {
+    display: block;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    border-bottom: 1px solid #eee;
+  }
 
-<!-- Aici poți pune ce info vrei: grafice, statistici, linkuri, etc -->
+  .settings-menu a:hover {
+    background-color: #f8f9fa;
+    color: #007bff;
+  }
 
-<ul>
-    <li><a href="{% url 'password_change' %}">Schimbă parola</a></li>
-    <li><a href="{% url 'logout' %}">Logout</a></li>
-</ul>
+  .settings-button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: white;
+    font-size: 1.5rem;
+    animation: rotate 0.4s ease;
+  }
 
+  .settings-button.rotate {
+    transform: rotate(180deg);
+  }
+
+  @media (max-width: 768px) {
+    .navbar-text {
+      display: block;
+      margin-top: 0.5rem;
+    }
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
+
+<!-- Bara de navigare -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3 py-2 position-relative">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <div>
+      <span class="navbar-brand mb-0 h1">Wind Turbine Dashboard</span>
+      <span class="text-light navbar-text ms-3">Bine ai venit, {{ user.username }} 👨‍🔧 !</span>
+    </div>
+
+    <div class="position-relative; display: inline-block;">
+      <button class="settings-button" onclick="toggleMenu()" aria-label="Setări">
+        ⚙️
+      </button>
+      <div id="settingsMenu" class="settings-menu">
+        <a href="{% url 'password_change' %}">Schimbă parola</a>
+        <a href="{% url 'logout' %}">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Conținut principal -->
+<div class="container mt-4">
+  <h2>Panou principal</h2>
+
+  <nav>
+    <button onclick="location.href='/api/turbines/'">Gestionare Parc Eoliene</button>
+  </nav>
+
+  <!-- Div pentru lista turbine -->
+  <div id="turbine-list" style="margin-bottom: 30px;">
+    <h3>Lista turbine</h3>
+    <!-- Aici va fi populată lista turbine -->
+  </div>
+
+  <!-- Div pentru hartă -->
+  <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+</div>
+
+<!-- Include Leaflet CSS și JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  function toggleMenu() {
+    const menu = document.getElementById("settingsMenu");
+    const button = document.querySelector(".settings-button");
+
+    const isOpen = menu.style.display === "block";
+
+    menu.style.display = isOpen ? "none" : "block";
+
+    if (isOpen) {
+      button.classList.remove("rotate");
+    } else {
+      button.classList.add("rotate");
+    }
+  }
+
+  document.addEventListener("click", function (e) {
+    const menu = document.getElementById("settingsMenu");
+    const button = document.querySelector(".settings-button");
+
+    if (!menu.contains(e.target) && !button.contains(e.target)) {
+      menu.style.display = "none";
+      button.classList.remove("rotate");
+    }
+  });
+
+  async function fetchTurbines() {
+    try {
+      const response = await fetch('/api/turbines/');
+      if (!response.ok) throw new Error('Network response was not ok');
+      const turbines = await response.json();
+
+      const turbineListDiv = document.getElementById('turbine-list');
+      turbineListDiv.innerHTML = '<h3>Lista turbine</h3>';
+
+      turbines.forEach(turbine => {
+        const turbineDiv = document.createElement('div');
+        turbineDiv.textContent = `${turbine.name} - Capacitate: ${turbine.capacity_kw} kW - Localizare: (${turbine.latitude}, ${turbine.longitude})`;
+        turbineListDiv.appendChild(turbineDiv);
+      });
+
+      return turbines;
+    } catch (error) {
+      console.error('Eroare la încărcarea turbinelor:', error);
+      return [];
+    }
+  }
+
+  function initMap(turbines) {
+    // Creare hartă centrată pe România
+    const map = L.map('map').setView([45.9432, 24.9668], 7);
+
+    // Tile layer OSM
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Adaugă markere pentru fiecare turbină
+    turbines.forEach(turbine => {
+      const marker = L.marker([turbine.latitude, turbine.longitude]).addTo(map);
+      marker.bindPopup(`<b>${turbine.name}</b><br>Capacitate: ${turbine.capacity_kw} kW<br>Instalată: ${turbine.installation_date}`);
+    });
+
+    // Ajustează zoom-ul să cuprindă toate markerele
+    if (turbines.length > 0) {
+      const group = new L.featureGroup(turbines.map(t => L.marker([t.latitude, t.longitude])));
+      map.fitBounds(group.getBounds().pad(0.5));
+    }
+  }
+
+  window.onload = async function () {
+    const turbines = await fetchTurbines();
+    initMap(turbines);
+  };
+</script>
 {% endblock %}

@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib import messages
+
 from django.contrib.auth.forms import UserCreationForm # Import the UserCreationForm for signup view
 from django.contrib.auth.decorators import login_required # Import the login_required decorator to protect views
 
@@ -72,4 +75,5 @@ def logout_view(request):
         return redirect('login')  # Redirect to the login page if not authenticated
     logout(request)
     return redirect('login')
+
 

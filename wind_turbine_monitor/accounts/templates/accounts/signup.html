@@ -1,20 +1,129 @@
 {% extends "base_generic.html" %}
+{% load static %}
 
 {% block content %}
-<h2>Crează un cont nou</h2>
+<style>
+    body {
+        background: url("{% static 'img/login_background.jpg' %}") no-repeat center center fixed;
+        background-size: cover;
+    }
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Înregistrează-te</button>
-</form>
-<p>Ai deja cont? <a href="{% url 'login' %}">Login</a></p>
+    .signup-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 1rem;
+    }
 
-{% if messages %}
-    <ul>
-    {% for message in messages %}
-        <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-{% endif %}
+    .signup-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(12px);
+        padding: 2.5rem 2rem;
+        border-radius: 15px;
+        box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+        width: 100%;
+        max-width: 400px;
+        color: rgb(0, 0, 0);
+        text-align: center;
+    }
+
+    .signup-card h2 {
+        margin-bottom: 1.5rem;
+        font-weight: 700;
+    }
+
+    .signup-card label {
+        display: block;
+        text-align: left;
+        margin-bottom: 0.3rem;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px 12px;
+        margin-bottom: 1.2rem;
+        border: 1.5px solid #ccc;
+        /* bordură gri */
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #000;
+        /* text negru */
+        background-color: #fff;
+        /* fundal alb */
+        box-sizing: border-box;
+    }
+
+    input::placeholder {
+        color: #666;
+        /* placeholder gri */
+    }
+
+    .signup-card button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .signup-card button:hover {
+        background-color: #0056b3;
+    }
+
+    .signup-links {
+        margin-top: 1.5rem;
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .signup-links a {
+        color: #0d6efd;
+        text-decoration: underline;
+        font-weight: 600;
+        transition: color 0.2s ease;
+    }
+
+    .signup-links a:hover {
+        color: #0a58ca;
+    }
+
+    /* Mesaje eroare */
+    .signup-card .error-message {
+        color: #ff4d4d;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        text-align: left;
+    }
+</style>
+
+<div class="signup-container">
+    <div class="signup-card">
+        <h2>Crează un cont nou</h2>
+
+        {% if messages %}
+        {% for message in messages %}
+        <p class="error-message">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Înregistrează-te</button>
+        </form>
+
+        <div class="signup-links">
+            <a href="{% url 'login' %}">Ai deja cont? Login</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
