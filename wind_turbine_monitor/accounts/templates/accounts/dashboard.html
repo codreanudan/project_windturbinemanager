@@ -361,7 +361,10 @@
       const response = await fetch('/api/turbines/');
       if (!response.ok) throw new Error('Network response was not ok');
       // const turbines = await response.json();
-      turbines = await response.json();
+      // turbines = await response.json();
+
+      const data = await response.json();
+      turbines = data.results || []; // <-- FIX: use .results
 
       const turbineListDiv = document.getElementById('turbine-list');
       turbineListDiv.innerHTML = '<h3>Lista turbine</h3>';
@@ -390,8 +393,10 @@
         <p><strong>Capacitate:</strong> ${turbine.capacity_kw} kW</p>
         <p><strong>Instalată la:</strong> ${turbine.installation_date}</p>
         <p><strong>Coordonate:</strong> (${turbine.latitude}, ${turbine.longitude})</p>
-        <button class="delete-button" onclick="deleteTurbine(${turbine.id}, '${turbine.name.replace(/'/g, "\\'")}')">Șterge</button>
-        <button class="edit-button" onclick="showEditForm(${turbine.id})">Modifică</button>
+        <!-- <button class="delete-button" onclick="deleteTurbine(${turbine.id}, '${turbine.name.replace(/'/g, "\\'")}')">Șterge</button> -->
+        <!-- <button class="edit-button" onclick="showEditForm(${turbine.id})">Modifică</button> -->
+        <button class="delete-button" onclick="deleteTurbine('${turbine.id}', '${turbine.name.replace(/'/g, "\\'")}')">Șterge</button>
+        <button class="edit-button" onclick="showEditForm('${turbine.id}')">Modifică</button>
         <form id="edit-form-${turbine.id}" style="display:none; margin-top:10px;">
           <label>
             Last maintenance date:
@@ -461,12 +466,18 @@
   document.getElementById('add-turbine-form').addEventListener('submit', async function (e) {
     e.preventDefault();
 
+
     const data = {
       name: this.name.value,
-      capacity_kw: this.capacity_kw.value,
+      capacity_kw: Number(this.capacity_kw.value),
       installation_date: this.installation_date.value,
-      latitude: this.latitude.value,
-      longitude: this.longitude.value,
+      latitude: Number(this.latitude.value),
+      longitude: Number(this.longitude.value),
+      last_maintenance_date: null, // or set from another input if you add it
+      maintenance_done: false,     // or set from another input if you add it
+      maintenance_overdue: false,  // default or computed
+      // wind_speed_kph: 0,           // default or computed
+      // instant_output_kw: 0         // default or computed
     };
 
     try {
@@ -517,20 +528,26 @@
     // Exemplu: turbineData este un obiect cu datele actuale
     // Dacă nu-l ai global, trebuie să-l ai altfel (de ex. să-l transmiți ca parametru)
 
-    const turbineData = turbines.find(t => t.id === id); // presupunem că ai un array `turbines`
+    // const turbineData = turbines.find(t => t.id === id); // presupunem că ai un array `turbines`
+    const turbineData = turbines.find(t => String(t.id) === String(id));
 
     if (!turbineData) {
       alert('Datele turbinei nu sunt disponibile pentru update.');
       return;
     }
 
-    // Construim obiectul de update, pornind de la datele vechi
+    // Build the update object, including all fields
     const data = {
       name: turbineData.name,
       capacity_kw: turbineData.capacity_kw,
       installation_date: turbineData.installation_date,
       latitude: turbineData.latitude,
       longitude: turbineData.longitude,
+      last_maintenance_date: formData.get('last_maintenance_date') || null,
+      maintenance_done: formData.get('maintenance_done') === 'on',
+      maintenance_overdue: turbineData.maintenance_overdue ?? false,
+      wind_speed_kph: turbineData.wind_speed_kph ?? 0,
+      instant_output_kw: turbineData.instant_output_kw ?? 0
     };
 
     // Suprascriem cu ce este în formData (cele modificate)

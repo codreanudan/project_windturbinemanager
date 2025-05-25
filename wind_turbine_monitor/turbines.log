@@ -1,0 +1,113 @@
+INFO 2025-05-26 00:30:06,211 mongo_service 8056 12268 Created turbine: T2_VESTAS_6_MW with ID: 68338bdea746e85d12847a84
+WARNING 2025-05-26 00:30:06,248 serializers 8056 12268 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:06,248 serializers 8056 12268 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:06,248 serializers 8056 12268 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+ERROR 2025-05-26 00:30:07,603 mongo_service 8056 19004 Error creating turbine: Turbine with name 'T2_VESTAS_6_MW' already exists
+WARNING 2025-05-26 00:30:11,664 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:11,666 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:11,667 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:13,649 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:13,650 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:13,651 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:14,575 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:14,575 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:14,575 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+INFO 2025-05-26 00:30:36,129 mongo_service 8056 15232 Created turbine: T1_VESTAS_6_MW with ID: 68338bfca746e85d12847a85
+WARNING 2025-05-26 00:30:36,170 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:36,171 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:36,171 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:36,260 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:36,262 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:36,262 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:36,263 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:36,264 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:36,265 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:39,410 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:39,410 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:39,410 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:39,413 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:39,414 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:39,415 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:43,683 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:43,683 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:43,683 serializers 8056 15232 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:43,683 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:43,683 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:30:43,684 serializers 8056 15232 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:53,436 serializers 4140 20536 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:53,437 serializers 4140 20536 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:53,437 serializers 4140 20536 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:53,437 serializers 4140 20536 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:53,437 serializers 4140 20536 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:53,437 serializers 4140 20536 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:54,603 serializers 4140 24432 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:54,603 serializers 4140 24432 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:54,603 serializers 4140 24432 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:54,609 serializers 4140 24432 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:54,610 serializers 4140 24432 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:54,611 serializers 4140 24432 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,420 serializers 4140 10664 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,420 serializers 4140 10664 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,420 serializers 4140 10664 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,420 serializers 4140 10664 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,421 serializers 4140 10664 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,421 serializers 4140 10664 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,513 serializers 4140 9540 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,514 serializers 4140 9540 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,515 serializers 4140 9540 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,516 serializers 4140 9540 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,517 serializers 4140 9540 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:36:55,518 serializers 4140 9540 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:37:18,138 serializers 4140 9540 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:37:18,139 serializers 4140 9540 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:37:18,140 serializers 4140 9540 Error getting wind speed for turbine T1_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:37:18,140 serializers 4140 9540 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:37:18,140 serializers 4140 9540 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+WARNING 2025-05-26 00:37:18,141 serializers 4140 9540 Error getting wind speed for turbine T2_VESTAS_6_MW: API key for WeatherAPI is missing!
+INFO 2025-05-26 00:54:48,217 mongo_service 24432 2812 Updated turbine: 68338bdea746e85d12847a84
+INFO 2025-05-26 00:54:49,877 mongo_service 24432 25128 Updated turbine: 68338bdea746e85d12847a84
+INFO 2025-05-26 00:54:50,187 mongo_service 24432 2604 Updated turbine: 68338bdea746e85d12847a84
+INFO 2025-05-26 01:19:55,071 mongo_service 23460 2800 Created turbine: T3 with ID: 6833978b0a227cab77af282f
+INFO 2025-05-26 01:20:04,516 mongo_service 23460 2800 Updated turbine: 6833978b0a227cab77af282f
+INFO 2025-05-26 01:20:18,362 mongo_service 23460 2800 Deleted turbine: 6833978b0a227cab77af282f
+INFO 2025-05-26 01:23:18,950 mongo_service 13588 25496 Successfully connected to MongoDB
+ERROR 2025-05-26 01:23:18,991 mongo_service 13588 25496 Error creating turbine: Turbine with name 'T1_VESTAS_6_MW' already exists
+INFO 2025-05-26 01:23:24,153 mongo_service 13588 23848 Successfully connected to MongoDB
+INFO 2025-05-26 01:23:54,507 mongo_service 13588 23848 Created turbine: T3_VESTAS_6_MW with ID: 6833987aa0f11a48a3ac79de
+INFO 2025-05-26 01:24:27,166 mongo_service 13588 23848 Updated turbine: 6833987aa0f11a48a3ac79de
+INFO 2025-05-26 01:27:23,250 mongo_service 8240 15560 Successfully connected to MongoDB
+INFO 2025-05-26 01:27:23,338 mongo_service 8240 15560 Created turbine: T4_VESTAS_6_MW with ID: 6833994bedb92831fd4c4af8
+INFO 2025-05-26 01:27:25,664 mongo_service 8240 18624 Successfully connected to MongoDB
+ERROR 2025-05-26 01:27:25,702 mongo_service 8240 18624 Error creating turbine: Turbine with name 'T4_VESTAS_6_MW' already exists
+INFO 2025-05-26 01:28:00,640 mongo_service 8240 18624 Updated turbine: 6833994bedb92831fd4c4af8
+INFO 2025-05-26 01:28:08,517 mongo_service 8240 18624 Updated turbine: 6833994bedb92831fd4c4af8
+INFO 2025-05-26 01:28:15,588 mongo_service 8240 18624 Updated turbine: 6833994bedb92831fd4c4af8
+INFO 2025-05-26 01:34:48,546 mongo_service 4600 25504 Successfully connected to MongoDB
+ERROR 2025-05-26 01:36:32,643 mongo_service 2392 16548 Failed to connect to MongoDB: The resolution lifetime expired after 10.007 seconds: Server Do53:213.233.64.233@53 answered The DNS operation timed out.; Server Do53:213.233.64.231@53 answered The DNS operation timed out.; Server Do53:100.100.1.1@53 answered The DNS operation timed out.; Server Do53:100.100.0.1@53 answered The DNS operation timed out.; Server Do53:213.233.64.233@53 answered The DNS operation timed out.
+INFO 2025-05-26 01:36:42,322 mongo_service 2392 25360 Successfully connected to MongoDB
+INFO 2025-05-26 01:37:18,428 mongo_service 11584 7924 Successfully connected to MongoDB
+INFO 2025-05-26 01:37:26,444 mongo_service 11584 18600 Successfully connected to MongoDB
+INFO 2025-05-26 01:38:05,183 mongo_service 11584 16048 Created turbine: T1_VESTAS_6_MW with ID: 68339bcd19064df7723b8fac
+INFO 2025-05-26 01:40:13,423 mongo_service 2956 5176 Successfully connected to MongoDB
+INFO 2025-05-26 01:40:13,468 mongo_service 2956 5176 Deleted turbine: 68339bcd19064df7723b8fac
+INFO 2025-05-26 01:40:16,919 mongo_service 2956 18088 Successfully connected to MongoDB
+INFO 2025-05-26 01:41:44,560 mongo_service 2956 25444 Created turbine: T1_VESTAS_6_MW with ID: 68339ca8dbdf923d525a0bd6
+INFO 2025-05-26 01:48:38,999 mongo_service 5460 11680 Successfully connected to MongoDB
+INFO 2025-05-26 01:51:29,268 mongo_service 5460 16240 Created turbine: T1_VESTAS_6_MW with ID: 68339ef1b2588abac9246325
+INFO 2025-05-26 01:54:46,023 mongo_service 5460 16240 Updated turbine: 68339ef1b2588abac9246325
+INFO 2025-05-26 01:54:54,704 mongo_service 5460 16240 Updated turbine: 68339ef1b2588abac9246325
+INFO 2025-05-26 01:56:00,843 mongo_service 23036 4796 Successfully connected to MongoDB
+INFO 2025-05-26 01:57:50,682 mongo_service 23036 4796 Created turbine: T1_VESTAS_6_MW with ID: 6833a06ed14d3cafdf1d4a6e
+INFO 2025-05-26 01:58:54,124 mongo_service 24276 6608 Successfully connected to MongoDB
+INFO 2025-05-26 01:58:54,218 mongo_service 24276 6608 Updated turbine: 6833a06ed14d3cafdf1d4a6e
+INFO 2025-05-26 01:58:58,813 mongo_service 24276 4592 Successfully connected to MongoDB
+INFO 2025-05-26 02:01:43,422 mongo_service 4928 14540 Successfully connected to MongoDB
+INFO 2025-05-26 02:01:49,819 mongo_service 4928 13236 Updated turbine: 6833a06ed14d3cafdf1d4a6e
+INFO 2025-05-26 02:15:20,336 mongo_service 18680 16068 Successfully connected to MongoDB
+INFO 2025-05-26 02:15:20,407 mongo_service 18680 16068 Created turbine: T2 with ID: 6833a488cde59647bf9faf4b
+INFO 2025-05-26 02:15:25,011 mongo_service 18680 23304 Successfully connected to MongoDB
+ERROR 2025-05-26 02:15:25,045 mongo_service 18680 23304 Error creating turbine: Turbine with name 'T2' already exists
+INFO 2025-05-26 02:15:26,901 mongo_service 18680 23304 Deleted turbine: 6833a488cde59647bf9faf4b
+INFO 2025-05-26 02:21:50,665 mongo_service 13332 19080 Successfully connected to MongoDB
+INFO 2025-05-26 02:22:59,545 mongo_service 10808 15920 Successfully connected to MongoDB
+INFO 2025-05-26 02:23:06,755 mongo_service 10808 13716 Successfully connected to MongoDB

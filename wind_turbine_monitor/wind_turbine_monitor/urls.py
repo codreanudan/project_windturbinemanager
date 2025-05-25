@@ -20,7 +20,7 @@ from django.views.generic.base import RedirectView
 from django.conf.urls.static import static
 from django.conf import settings
 from pathlib import Path
-from turbines.views import WindTurbineViewSet, api_dashboard_view  # Import the dashboard view
+from turbines.views import MongoWindTurbineViewSet, api_dashboard_view
 import os
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
@@ -32,6 +32,7 @@ urlpatterns = [
     path('', RedirectView.as_view(url='/login/', permanent=False)), # Redirect root URL to login page
     path('api/', include('turbines.urls')), # Include the URLs from the turbines app
     path('dashboard/', api_dashboard_view, name='api-dashboard'),  # Dashboard view for the API
+    
 ]
 
 if settings.DEBUG:

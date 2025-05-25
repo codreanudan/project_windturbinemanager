@@ -47,6 +47,7 @@ class WeatherAPIService:
             return None
 
     def get_current_weather(self, latitude: float, longitude: float) -> dict | None:
+        print(f"Weather API called for: {latitude}, {longitude}")
         params = {
             "key": self.api_key,
             "q": f"{latitude},{longitude}",

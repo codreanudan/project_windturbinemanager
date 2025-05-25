@@ -1,0 +1,45 @@
+"""
+URL configuration for wind_turbine_monitor project.
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/5.2/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
+from django.contrib import admin
+from django.urls import path, include
+from django.views.generic.base import RedirectView
+from django.conf.urls.static import static
+from django.conf import settings
+from pathlib import Path
+from turbines.views import WindTurbineViewSet, api_dashboard_view  # Import from turbines app
+import os
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from rest_framework.routers import DefaultRouter
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Create router for API endpoints
+router = DefaultRouter()
+router.register(r'wind-turbines', WindTurbineViewSet, basename='windturbine')
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('accounts.urls')),  # Include the URLs from the accounts app
+    path('', RedirectView.as_view(url='/login/', permanent=False)),  # Redirect root URL to login page
+    path('api/', include('turbines.urls')),  # Include the URLs from the turbines app
+    path('api/', include(router.urls)),  # Include router URLs for ViewSet
+    path('dashboard/', api_dashboard_view, name='api-dashboard'),  # Dashboard view for the API
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=BASE_DIR / "static")
+    urlpatterns += staticfiles_urlpatterns()  # Serve static files in development

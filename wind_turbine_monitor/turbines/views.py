@@ -1,78 +1,68 @@
-# # turbines/views.py
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from rest_framework import viewsets
-# from .services.mongo_service import MongoService
-# from turbines.serializers import WindTurbineSerializer
-# from .models import WindTurbine
-
-# mongo_service = MongoService()
-
-# class WindTurbineListCreateView(APIView):
-#     def get(self, request):
-#         turbines = mongo_service.list_wind_turbines()
-#         serializer = WindTurbineSerializer(turbines, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         serializer = WindTurbineSerializer(data=request.data)
-#         if serializer.is_valid():
-#             turbine_id = mongo_service.insert_wind_turbine(serializer.validated_data)
-#             return Response({"id": turbine_id}, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# class WindTurbineViewSet(viewsets.ViewSet):
-#     queryset = WindTurbine.objects.all()
-#     def list(self, request):
-#         turbines = mongo_service.list_wind_turbines()
-#         return Response(turbines)
-
-#     def retrieve(self, request, pk=None):
-#         turbine = mongo_service.get_wind_turbine(pk)
-#         if turbine:
-#             return Response(turbine)
-#         return Response({'detail': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
-    
-#     def create(self, request):
-#         serializer = WindTurbineSerializer(data=request.data)
-#         if serializer.is_valid():
-#             turbine_id = mongo_service.insert_wind_turbine(serializer.validated_data)
-#             return Response({'id': turbine_id}, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     def update(self, request, pk=None):
-#         if mongo_service.update_wind_turbine(pk, request.data):
-#             return Response({'detail': 'Updated'}, status=status.HTTP_200_OK)
-#         return Response({'detail': 'Not found or not modified'}, status=status.HTTP_404_NOT_FOUND)
-    
-#     def destroy(self, request, pk=None):
-#         if mongo_service.delete_wind_turbine(pk):
-#             return Response(status=status.HTTP_204_NO_CONTENT)
-#         return Response({'detail': 'Not found'}, status=status.HTTP_404_NOT_FOUND)
-
-
-# def api_dashboard_view(request):
-#     fields = ["name", "capacity_kw", "installation_date", "latitude", "longitude"]
-#     fields_with_placeholders = [(f, f.replace('_', ' ').capitalize()) for f in fields]
-#     return render(request, "dashboard.html", {"fields_with_placeholders": fields_with_placeholders})
-
-from django.shortcuts import render
-from rest_framework import viewsets
-from .models import WindTurbine
-from .serializers import WindTurbineSerializer
-from pathlib import Path
+from rest_framework import viewsets, status
 from rest_framework.response import Response
+from rest_framework.decorators import action
+from django.shortcuts import render
+from pathlib import Path
 
+from .services.mongo_service import get_mongo_service
+from .services.utils.mongo_adapter import drf_to_mongo, mongo_to_drf
+from .serializers import MongoWindTurbineSerializer
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-class WindTurbineViewSet(viewsets.ModelViewSet):
+class MongoWindTurbineViewSet(viewsets.ViewSet):
     """
-    API endpoint that allows wind turbines to be viewed or edited.
+    API endpoint for wind turbines using MongoDB.
     """
-    queryset = WindTurbine.objects.all()
-    serializer_class = WindTurbineSerializer
+    def list(self, request):
+        # Pagination
+        limit = int(request.query_params.get('limit', 100))
+        offset = int(request.query_params.get('offset', 0))
+        mongo_service = get_mongo_service()
+        turbines = mongo_service.list_turbines(limit=limit, offset=offset)
+        count = mongo_service.count_turbines()
+         # Convert to DRF format (convert date strings to date objects)
+        turbines = [mongo_to_drf(t) for t in turbines]
+        results = [MongoWindTurbineSerializer(t).data for t in turbines]
+        return Response({"count": count, "results": results})
+
+    def retrieve(self, request, pk=None):
+        mongo_service = get_mongo_service()
+        turbine = mongo_service.get_turbine(pk)
+        if turbine:
+            turbine = mongo_to_drf(turbine)
+            return Response(MongoWindTurbineSerializer(turbine).data)
+        return Response({'detail': 'Not found.'}, status=404)
+    
+    def create(self, request):
+        mongo_service = get_mongo_service()
+        data = drf_to_mongo(request.data)
+        try:
+            new_id = mongo_service.create_turbine(data)
+            return Response({'id': new_id}, status=201)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=400)
+
+    def update(self, request, pk=None):
+        mongo_service = get_mongo_service()
+        data = drf_to_mongo(request.data)
+        try:
+            success = mongo_service.update_turbine(pk, data)
+            if success:
+                return Response({'id': pk})
+            return Response({'detail': 'Update failed.'}, status=400)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=400)
+
+    def destroy(self, request, pk=None):
+        mongo_service = get_mongo_service()
+        try:
+            success = mongo_service.delete_turbine(pk)
+            if success:
+                return Response(status=204)
+            return Response({'detail': 'Delete failed.'}, status=400)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=400)
 
 def api_dashboard_view(request):
     fields = ["name", "capacity_kw", "installation_date", "latitude", "longitude"]
