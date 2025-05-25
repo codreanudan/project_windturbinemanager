@@ -325,21 +325,21 @@
     markersLayer = L.layerGroup().addTo(map);
   }
 
-function updateMarkers(turbines) {
-  // Șterge markerii vechi
-  markersLayer.clearLayers();
+  function updateMarkers(turbines) {
+    // Șterge markerii vechi
+    markersLayer.clearLayers();
 
-  turbines.forEach(turbine => {
-    let color = turbine.maintenance_overdue ? 'orange' : 'green';
+    turbines.forEach(turbine => {
+      let color = turbine.maintenance_overdue ? 'orange' : 'green';
 
-    const marker = L.circleMarker([turbine.latitude, turbine.longitude], {
-      fillColor: color,
-      color: '#000', // contur negru ca să iasă bine în evidență
-      radius: 8,
-      fillOpacity: 0.8,
-    });
+      const marker = L.circleMarker([turbine.latitude, turbine.longitude], {
+        fillColor: color,
+        color: '#000', // contur negru ca să iasă bine în evidență
+        radius: 8,
+        fillOpacity: 0.8,
+      });
 
-    marker.bindPopup(`
+      marker.bindPopup(`
       <b>${turbine.name}</b><br/>
       📊 Capacitate: ${turbine.capacity_kw} kW<br/>
       📅 Ultima revizie: ${turbine.last_maintenance_date || 'N/A'}<br/>
@@ -348,10 +348,10 @@ function updateMarkers(turbines) {
       🌀 Viteza vânt: ${turbine.wind_speed_kph} km/h <br/>
     `);
 
-    // Adaugă markerul în layer-ul dedicat
-    markersLayer.addLayer(marker);
-  });
-}
+      // Adaugă markerul în layer-ul dedicat
+      markersLayer.addLayer(marker);
+    });
+  }
 
   let turbines = [];
 
@@ -434,11 +434,8 @@ function updateMarkers(turbines) {
   }
 
   async function deleteTurbine(id, name) {
-    // Confirmare înainte de ștergere
-    const confirmed = confirm(`Ești sigur că vrei să ștergi turbina "${name}"?`);
-    if (!confirmed) {
-      return; // dacă userul apasă Cancel, nu facem nimic
-    }
+    console.log('deleteTurbine called with:', id, name);
+    if (!confirm(`Sigur vrei să ștergi turbină ${name}?`)) return;
 
     try {
       const response = await fetch(`/api/turbines/${id}/`, {
@@ -448,13 +445,15 @@ function updateMarkers(turbines) {
         },
       });
 
-      if (response.status === 204) {
+      if (response.ok) {
+        alert(`Turbină ${name} ștearsă cu succes.`);
         fetchTurbines();
       } else {
-        console.error('Eroare la ștergere:', await response.text());
+        const errorData = await response.json();
+        alert(`Eroare la ștergere: ${response.status} ${response.statusText}\n${JSON.stringify(errorData)}`);
       }
     } catch (error) {
-      console.error('Eroare rețea la ștergere:', error);
+      alert(`Eroare de rețea: ${error.message}`);
     }
   }
 

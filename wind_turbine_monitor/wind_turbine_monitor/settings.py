@@ -16,6 +16,11 @@ import dj_database_url
 from urllib.parse import urlparse # Import urlparse to parse the database URL
 from dotenv import load_dotenv
 
+MONGO_URI = \
+"mongodb+srv://dbUser:dbUserPassword@cluster0.wtnbkwh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tls=true&tlsAllowInvalidCertificates=true"
+MONGO_DB_NAME = "WIND_TURBINE_MONITOR"
+MONGO_COLLECTION_NAME = "WIND_TURBINE_MONITOR"
+
 dotenv_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 dotenv_path = os.path.join(dotenv_dir, '.env')
 
@@ -42,8 +47,8 @@ SECRET_KEY = 'django-insecure-5l-v9d53l5f*5!$da_+k!&xk*6bhei-lxp(c^db1hw+o-gz(j!
 WEATHER_API_KEY ="c67cac5327c741a7abb82828252505"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True # Set to True for development
-DEBUG = False # Set to False for production (Hosting on Render.com)
+DEBUG = True # Set to True for development
+# DEBUG = False # Set to False for production (Hosting on Render.com)
 
 ALLOWED_HOSTS = ['*'] # Allow all hosts for development purposes
 
