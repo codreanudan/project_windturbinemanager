@@ -5,6 +5,7 @@ from datetime import datetime, date
 import logging
 from typing import Optional, List, Dict, Any
 from django.conf import settings
+import certifi
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,7 @@ class MongoService:
             
             self.client = MongoClient(
                 connection_string,
+                tlsCAFile=certifi.where(),
                 serverSelectionTimeoutMS=5000,
                 connectTimeoutMS=10000,
                 socketTimeoutMS=10000

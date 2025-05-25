@@ -111,3 +111,6 @@ INFO 2025-05-26 02:15:26,901 mongo_service 18680 23304 Deleted turbine: 6833a488
 INFO 2025-05-26 02:21:50,665 mongo_service 13332 19080 Successfully connected to MongoDB
 INFO 2025-05-26 02:22:59,545 mongo_service 10808 15920 Successfully connected to MongoDB
 INFO 2025-05-26 02:23:06,755 mongo_service 10808 13716 Successfully connected to MongoDB
+INFO 2025-05-26 02:25:32,983 mongo_service 10808 15772 Updated turbine: 6833a06ed14d3cafdf1d4a6e
+INFO 2025-05-26 02:32:43,465 mongo_service 23996 13144 Successfully connected to MongoDB
+INFO 2025-05-26 02:33:40,705 mongo_service 23996 13144 Created turbine: T2_VESTAS_6_MW with ID: 6833a8d46cc15ce52c95e98b
