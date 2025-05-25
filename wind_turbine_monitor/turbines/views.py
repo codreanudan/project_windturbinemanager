@@ -15,6 +15,5 @@ class WindTurbineViewSet(viewsets.ModelViewSet):
 
 def api_dashboard_view(request):
     fields = ["name", "capacity_kw", "installation_date", "latitude", "longitude"]
-    # Creăm o listă de tuple (field_name, placeholder)
     fields_with_placeholders = [(f, f.replace('_', ' ').capitalize()) for f in fields]
     return render(request, "dashboard.html", {"fields_with_placeholders": fields_with_placeholders})

@@ -341,10 +341,11 @@ function updateMarkers(turbines) {
 
     marker.bindPopup(`
       <b>${turbine.name}</b><br/>
-      Capacitate: ${turbine.capacity_kw} kW<br/>
-      Ultima revizie: ${turbine.last_maintenance_date || 'N/A'}<br/>
-      Revizie făcută: ${turbine.maintenance_done ? 'Da' : 'Nu'}<br/>
-      Output instant: ${turbine.instant_output_kw} kW
+      📊 Capacitate: ${turbine.capacity_kw} kW<br/>
+      📅 Ultima revizie: ${turbine.last_maintenance_date || 'N/A'}<br/>
+      🛠️ Revizie făcută: ${turbine.maintenance_done ? 'Da ✅' : 'Nu ❌'}<br/>
+      ⚡ Output instant: ${turbine.instant_output_kw} kW <br/>
+      🌀 Viteza vânt: ${turbine.wind_speed_kph} km/h <br/>
     `);
 
     // Adaugă markerul în layer-ul dedicat

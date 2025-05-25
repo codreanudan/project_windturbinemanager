@@ -30,5 +30,4 @@ class WindTurbine(models.Model):
             return True
         if not self.last_maintenance_date:
             return True
-        # Dacă ultima revizie a fost făcută cu mai mult de X zile în urmă (de exemplu, 365 zile)
         return (timezone.now().date() - self.last_maintenance_date).days > 7

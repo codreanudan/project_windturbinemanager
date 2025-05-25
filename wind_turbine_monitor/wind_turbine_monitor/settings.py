@@ -14,6 +14,15 @@ from pathlib import Path
 import os
 import dj_database_url
 from urllib.parse import urlparse # Import urlparse to parse the database URL
+from dotenv import load_dotenv
+
+dotenv_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dotenv_path = os.path.join(dotenv_dir, '.env')
+
+print("Loading environment variables from:", dotenv_path)
+if os.path.exists(dotenv_path):
+    print("Found .env file, loading environment variables.")
+    load_dotenv(dotenv_path)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -30,10 +39,11 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5l-v9d53l5f*5!$da_+k!&xk*6bhei-lxp(c^db1hw+o-gz(j!'
+WEATHER_API_KEY ="c67cac5327c741a7abb82828252505"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # Set to True for development
-# DEBUG = False # Set to False for production (Hosting on Render.com)
+# DEBUG = True # Set to True for development
+DEBUG = False # Set to False for production (Hosting on Render.com)
 
 ALLOWED_HOSTS = ['*'] # Allow all hosts for development purposes
 
@@ -86,8 +96,12 @@ WSGI_APPLICATION = 'wind_turbine_monitor.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 db_url = os.getenv('DATABASE_URL')
+WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
+print("Weather API Key:", WEATHER_API_KEY)
+print("Database URL:", db_url)
 
 if db_url:
+    print("Using DATABASE_URL from environment variables.")
     result = urlparse(db_url)
     DATABASES = {
         'default': {
@@ -100,6 +114,7 @@ if db_url:
         }
     }
 else:
+    print("DATABASE_URL not found in environment variables, using default SQLite database.")
     # fallback local db
     DATABASES = {
         'default': {
