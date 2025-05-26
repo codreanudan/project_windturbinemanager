@@ -114,3 +114,15 @@ INFO 2025-05-26 02:23:06,755 mongo_service 10808 13716 Successfully connected to
 INFO 2025-05-26 02:25:32,983 mongo_service 10808 15772 Updated turbine: 6833a06ed14d3cafdf1d4a6e
 INFO 2025-05-26 02:32:43,465 mongo_service 23996 13144 Successfully connected to MongoDB
 INFO 2025-05-26 02:33:40,705 mongo_service 23996 13144 Created turbine: T2_VESTAS_6_MW with ID: 6833a8d46cc15ce52c95e98b
+INFO 2025-05-26 02:34:53,791 mongo_service 23996 13144 Created turbine: T3_VESTAS_6_MW with ID: 6833a91d6cc15ce52c95e98c
+INFO 2025-05-26 02:36:12,721 mongo_service 23996 13144 Created turbine: T4_VESTAS_6_MW with ID: 6833a96c6cc15ce52c95e98d
+INFO 2025-05-26 02:37:22,646 mongo_service 23996 13144 Created turbine: T5_VESTAS_6_MW with ID: 6833a9b26cc15ce52c95e98e
+INFO 2025-05-26 13:03:56,125 mongo_service 26648 18276 Successfully connected to MongoDB
+INFO 2025-05-26 13:08:22,774 mongo_service 19952 26396 Successfully connected to MongoDB
+INFO 2025-05-26 13:10:13,716 mongo_service 13052 17952 Successfully connected to MongoDB
+INFO 2025-05-26 13:18:26,289 mongo_service 20556 6568 Successfully connected to MongoDB
+INFO 2025-05-26 13:27:02,850 mongo_service 8264 2764 Successfully connected to MongoDB
+INFO 2025-05-26 13:27:03,689 mongo_service 8264 22932 Successfully connected to MongoDB
+INFO 2025-05-26 13:27:42,379 mongo_service 23064 26112 Successfully connected to MongoDB
+INFO 2025-05-26 13:30:40,343 mongo_service 26496 25292 Successfully connected to MongoDB
+INFO 2025-05-26 13:34:54,631 mongo_service 17620 24948 Successfully connected to MongoDB

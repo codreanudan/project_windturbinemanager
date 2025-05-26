@@ -47,7 +47,7 @@ class MongoWindTurbineSerializer(serializers.Serializer):
     def calculate_power_wind(self, v_kph: float, rotor_radius_m: float, cp: float = 0.4, air_density: float = 1.225) -> float:
         v_ms = v_kph / 3.6
         area = math.pi * rotor_radius_m ** 2
-        power_w = 0.5 * air_density * area * cp * (v_ms ** 3)
+        power_w = 0.5 * air_density * area * cp * (v_ms ** 3)  * 10
         return power_w
 
     def get_instant_output_kw(self, obj):

@@ -1,0 +1,558 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+  body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .energy-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 0;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .energy-header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 300;
+  }
+
+  .energy-header p {
+    margin: 10px 0 0 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #e9ecef;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-card .icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  .stat-card h3 {
+    margin: 0 0 15px 0;
+    color: #495057;
+    font-size: 1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .stat-card .value {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #007bff;
+    margin-bottom: 8px;
+  }
+
+  .stat-card .unit {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .charts-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+  }
+
+  .chart-container {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+    height: 500px; /* Fixed height for container */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chart-title {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #495057;
+    font-size: 1.3rem;
+    font-weight: 600;
+    flex-shrink: 0; /* Don't shrink the title */
+  }
+
+  .chart-wrapper {
+    position: relative;
+    flex: 1; /* Take remaining space */
+    width: 100%;
+    max-height: 400px; /* Maximum height for chart */
+    overflow: hidden; /* Prevent overflow */
+  }
+
+  .chart-canvas {
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .loading-container {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    margin: 20px 0;
+  }
+
+  .loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .error-container {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #f5c6cb;
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  .back-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 20px;
+    transition: transform 0.2s ease;
+  }
+
+  .back-button:hover {
+    transform: translateY(-2px);
+    color: white;
+    text-decoration: none;
+  }
+
+  .refresh-button {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-left: 10px;
+    transition: background-color 0.2s ease;
+  }
+
+  .refresh-button:hover {
+    background: #218838;
+  }
+
+  .last-updated {
+    text-align: center;
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-top: 20px;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .charts-section {
+      grid-template-columns: 1fr;
+    }
+    
+    .stats-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    }
+    
+    .energy-header h1 {
+      font-size: 2rem;
+    }
+    
+    .stat-card .value {
+      font-size: 1.8rem;
+    }
+
+    .chart-container {
+      height: 450px; /* Slightly smaller on mobile */
+    }
+
+    .chart-wrapper {
+      max-height: 350px;
+    }
+  }
+</style>
+
+<div class="energy-header">
+  <div class="container">
+    <h1>🇷🇴 România - Dashboard Energetic</h1>
+    <p>Monitorizarea în timp real a producției și consumului de energie electrică</p>
+  </div>
+</div>
+
+<div class="container">
+  <a href="{% url 'dashboard' %}" class="back-button">← Înapoi la Dashboard</a>
+  <button class="refresh-button" onclick="loadEnergyData()">🔄 Actualizează</button>
+
+  <div id="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <h3>Se încarcă datele energetice...</h3>
+    <p>Obținerea informațiilor de la ElectricityMap API</p>
+  </div>
+
+  <div id="error" class="error-container" style="display: none;">
+    <h3>❌ Eroare la încărcarea datelor</h3>
+    <p id="error-message"></p>
+    <button class="refresh-button" onclick="loadEnergyData()">Încearcă din nou</button>
+  </div>
+
+  <div id="content" style="display: none;">
+    <!-- Statistics Cards -->
+    <div id="stats" class="stats-grid"></div>
+
+    <!-- Charts Section -->
+    <div class="charts-section">
+      <div class="chart-container">
+        <h3 class="chart-title">Producția de energie pe surse</h3>
+        <div class="chart-wrapper">
+          <canvas id="productionChart" class="chart-canvas"></canvas>
+        </div>
+      </div>
+      
+      <div class="chart-container">
+        <h3 class="chart-title">Consumul de energie pe surse</h3>
+        <div class="chart-wrapper">
+          <canvas id="consumptionChart" class="chart-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div id="lastUpdated" class="last-updated"></div>
+  </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+<script>
+  let productionChart = null;
+  let consumptionChart = null;
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  async function loadEnergyData() {
+    showLoading();
+    
+    try {
+      const response = await fetch('/api/energy-data/');
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      displayEnergyData(data);
+      hideLoading();
+      
+    } catch (error) {
+      console.error('Error loading energy data:', error);
+      showError(error.message);
+    }
+  }
+
+  function showLoading() {
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('error').style.display = 'none';
+    document.getElementById('content').style.display = 'none';
+  }
+
+  function hideLoading() {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'block';
+  }
+
+  function showError(message) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('content').style.display = 'none';
+    document.getElementById('error').style.display = 'block';
+    document.getElementById('error-message').textContent = message;
+  }
+
+  function displayEnergyData(data) {
+    displayStats(data);
+    createCharts(data);
+    updateLastUpdated(data.updatedAt);
+  }
+
+  function displayStats(data) {
+    const statsContainer = document.getElementById('stats');
+    const renewableEnergy = calculateRenewableEnergy(data.powerProductionBreakdown);
+    const energyBalance = data.powerProductionTotal - data.powerConsumptionTotal;
+    
+    statsContainer.innerHTML = `
+      <div class="stat-card">
+        <span class="icon">⚡</span>
+        <h3>Producție Totală</h3>
+        <div class="value">${data.powerProductionTotal.toLocaleString()}</div>
+        <div class="unit">MW</div>
+      </div>
+      
+      <div class="stat-card">
+        <span class="icon">🏠</span>
+        <h3>Consum Total</h3>
+        <div class="value">${data.powerConsumptionTotal.toLocaleString()}</div>
+        <div class="unit">MW</div>
+      </div>
+      
+      <div class="stat-card">
+        <span class="icon">🌱</span>
+        <h3>Energie Regenerabilă</h3>
+        <div class="value">${data.renewablePercentage}</div>
+        <div class="unit">% din producție</div>
+      </div>
+      
+      <div class="stat-card">
+        <span class="icon">🚫</span>
+        <h3>Fără Combustibili Fosili</h3>
+        <div class="value">${data.fossilFreePercentage}</div>
+        <div class="unit">% din producție</div>
+      </div>
+      
+      <div class="stat-card">
+        <span class="icon">📊</span>
+        <h3>Bilanț Energetic</h3>
+        <div class="value" style="color: ${energyBalance >= 0 ? '#28a745' : '#dc3545'}">${energyBalance > 0 ? '+' : ''}${energyBalance.toLocaleString()}</div>
+        <div class="unit">MW ${energyBalance >= 0 ? 'surplus' : 'deficit'}</div>
+      </div>
+      
+      <div class="stat-card">
+        <span class="icon">🔄</span>
+        <h3>Import Net</h3>
+        <div class="value">${(data.powerImportTotal - data.powerExportTotal).toLocaleString()}</div>
+        <div class="unit">MW</div>
+      </div>
+    `;
+  }
+
+  function calculateRenewableEnergy(breakdown) {
+    const renewableSources = ['wind', 'solar', 'hydro', 'biomass', 'geothermal'];
+    return renewableSources.reduce((total, source) => {
+      return total + (breakdown[source] || 0);
+    }, 0);
+  }
+
+  function createCharts(data) {
+    createProductionChart(data.powerProductionBreakdown);
+    createConsumptionChart(data.powerConsumptionBreakdown);
+  }
+
+  function createProductionChart(data) {
+    const ctx = document.getElementById('productionChart').getContext('2d');
+    
+    if (productionChart) {
+      productionChart.destroy();
+    }
+
+    const { labels, values, colors } = prepareChartData(data);
+
+    productionChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: values,
+          backgroundColor: colors,
+          borderColor: '#ffffff',
+          borderWidth: 3
+        }]
+      },
+      options: getChartOptions()
+    });
+  }
+
+  function createConsumptionChart(data) {
+    const ctx = document.getElementById('consumptionChart').getContext('2d');
+    
+    if (consumptionChart) {
+      consumptionChart.destroy();
+    }
+
+    const { labels, values, colors } = prepareChartData(data);
+
+    consumptionChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: values,
+          backgroundColor: colors,
+          borderColor: '#ffffff',
+          borderWidth: 3
+        }]
+      },
+      options: getChartOptions()
+    });
+  }
+
+  function prepareChartData(data) {
+    const filteredData = {};
+    Object.entries(data).forEach(([key, value]) => {
+      if (value && value > 0) {
+        filteredData[key] = value;
+      }
+    });
+
+    const translations = {
+      'nuclear': '☢️ Nuclear',
+      'hydro': '💧 Hidro',
+      'wind': '💨 Eolian',
+      'solar': '☀️ Solar',
+      'gas': '🔥 Gaz natural',
+      'coal': '⚫ Cărbune',
+      'biomass': '🌱 Biomasă',
+      'geothermal': '🌋 Geotermal',
+      'oil': '🛢️ Petrol',
+      'unknown': '❓ Necunoscut',
+      'hydro discharge': '💧 Descărcare hidro',
+      'battery discharge': '🔋 Baterii'
+    };
+
+    const labels = Object.keys(filteredData).map(key => translations[key] || key);
+    const values = Object.values(filteredData);
+    
+    const colors = [
+      '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', 
+      '#FECA57', '#FF9FF3', '#54A0FF', '#5F27CD',
+      '#00D2D3', '#FF9F43', '#C44569', '#F8B500'
+    ];
+
+    return { labels, values, colors: colors.slice(0, labels.length) };
+  }
+
+  function getChartOptions() {
+    return {
+      responsive: true,
+      maintainAspectRatio: true, // Changed to true
+      aspectRatio: 1, // Added aspect ratio to maintain square shape
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            padding: 15, // Reduced padding
+            usePointStyle: true,
+            font: {
+              size: 10, // Slightly smaller font
+              weight: '500'
+            }
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          callbacks: {
+            label: function(context) {
+              const label = context.label || '';
+              const value = context.raw;
+              const total = context.dataset.data.reduce((a, b) => a + b, 0);
+              const percentage = ((value / total) * 100).toFixed(1);
+              return `${label}: ${value.toLocaleString()} MW (${percentage}%)`;
+            }
+          }
+        }
+      },
+      animation: {
+        animateRotate: true,
+        duration: 1000 // Reduced animation duration
+      },
+      layout: {
+        padding: {
+          top: 10,
+          bottom: 10,
+          left: 10,
+          right: 10
+        }
+      }
+    };
+  }
+
+  function updateLastUpdated(updatedAt) {
+    const lastUpdatedDiv = document.getElementById('lastUpdated');
+    const date = new Date(updatedAt);
+    lastUpdatedDiv.innerHTML = `
+      <strong>Ultima actualizare:</strong> ${date.toLocaleString('ro-RO')}<br>
+      <small>Sursa: ElectricityMap API</small>
+    `;
+  }
+
+  // Load data when page loads
+  document.addEventListener('DOMContentLoaded', loadEnergyData);
+
+  // Auto-refresh every 5 minutes
+  setInterval(loadEnergyData, 5 * 60 * 1000);
+</script>
+
+{% endblock %}
