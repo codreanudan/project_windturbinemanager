@@ -126,3 +126,4 @@ INFO 2025-05-26 13:27:03,689 mongo_service 8264 22932 Successfully connected to 
 INFO 2025-05-26 13:27:42,379 mongo_service 23064 26112 Successfully connected to MongoDB
 INFO 2025-05-26 13:30:40,343 mongo_service 26496 25292 Successfully connected to MongoDB
 INFO 2025-05-26 13:34:54,631 mongo_service 17620 24948 Successfully connected to MongoDB
+INFO 2025-05-26 13:57:04,808 mongo_service 22436 24964 Successfully connected to MongoDB
