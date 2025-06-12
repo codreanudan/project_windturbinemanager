@@ -63,8 +63,9 @@ All data is stored in a scalable MongoDB database, and the application is hosted
 ![image](https://github.com/user-attachments/assets/345bfd5e-4ba5-42ca-ab8d-e8b89a158e02)
 - **API Implementation Diagram**
 ![image](https://github.com/user-attachments/assets/f476e6cd-0051-4d91-903d-64402c759620)
-- **Login / Register UI**
+- **Login UI**
 ![image](https://github.com/user-attachments/assets/8501a2a5-01e4-455f-b833-a60f2238423b)
+- **Register UI**
 ![image](https://github.com/user-attachments/assets/5a4d917e-1faa-44c7-81cb-ebc2e7c7c5f5)
 - **Main Dashboard with Map**
 ![image](https://github.com/user-attachments/assets/6b5b6cc4-6f87-46fe-932b-d35617def9f2)
