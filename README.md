@@ -1,8 +1,5 @@
 # 🌬️ Wind Turbine Manager
 
-**Author:** Codreanu Dan  
-**Student ID:** 6305
-
 ## 📌 Project Overview
 
 **Wind Turbine Manager** is a web application designed to monitor a wind turbine park using modern APIs and technologies. It provides users with an intuitive interface for:
