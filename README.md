@@ -13,7 +13,7 @@
 - Viewing real-time wind speed and turbine performance (via Weather API)
 - Accessing energy production and consumption data for Romania (via Electricity Map API)
 
-All data is stored in a scalable MongoDB database, and the application is hosted on [Render.com]([https://render.com](https://project-windturbinemanager.onrender.com/login/)), making it accessible from anywhere.
+All data is stored in a scalable MongoDB database, and the application is hosted on [Render.com](https://project-windturbinemanager.onrender.com/login/), making it accessible from anywhere.
 
 ---
 
